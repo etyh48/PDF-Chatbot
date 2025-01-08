@@ -1,0 +1,31 @@
+/* Most styles are now handled by Material UI */
+/* Only keeping essential custom styles */
+
+:root {
+  --primary-color: #1976d2;  /* MUI default primary color */
+  --primary-hover: #1565c0;
+}
+
+/* Custom scrollbar - if still needed */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Any height constraints needed for the chat container */
+.chat-messages {
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+}

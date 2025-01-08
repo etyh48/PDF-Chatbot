@@ -1,0 +1,63 @@
+﻿<!-- frontend/public/pdfjs/viewer.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PDF Viewer</title>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    #canvas-container {
+      width: 100%;
+      height: 100vh;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+    }
+    #pdf-canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="pdf-canvas"></canvas>
+  </div>
+
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    async function loadPdf() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const pdfUrl = urlParams.get('file');
+      const initialPage = parseInt(urlParams.get('page'), 10) || 1;
+
+      try {
+        const loadingTask = pdfjsLib.getDocument(pdfUrl);
+        const pdf = await loadingTask.promise;
+        
+        // Get the requested page
+        const page = await pdf.getPage(initialPage);
+        
+        // Render page
+        const scale = 1.5;
+        const viewport = page.getViewport({ scale });
+        const canvas = document.getElementById('pdf-canvas');
+        const context = canvas.getContext('2d');
+
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        await page.render({
+          canvasContext: context,
+          viewport: viewport
+        }).promise;
+
+      } catch (error) {
+        console.error('Error loading PDF:', error);
+      }
+    }
+
+    loadPdf();
+  </script>
+</body>
+</html>
